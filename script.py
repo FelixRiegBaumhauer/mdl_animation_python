@@ -34,10 +34,11 @@ def first_pass( commands ):
     global frames_set
     global basename_set
 
-    cmds = [c[0] for c in commands]
+    #A COLLECTION OF THE COMMANDS
+    cmds = [c[0]for c in commands]
 
     #THIS WILL FIRE IF FRAMES AND ERROR DOESN'T CHECK OUT
-    if "vary" in cmds and not "frames" in cmds:
+    if ("vary" in cmds and not "frames" in cmds):
         print "FRAMES WAS NOT SET PRIOR TO CALLING VARY"
         sys.exit()
 
@@ -45,16 +46,16 @@ def first_pass( commands ):
         c = command[0]
         args = command[1:]
 
-        if c == "frames":
+        if (c == "frames"):
             frames = args[0]
             frames_set = True
 
-        elif c == "basename":
+        elif (c == "basename"):
             basename = args[0]
             basename_set = True
 
-    if frames_set and not basename_set:
-        print "BASENAME WAS NOT SET, BASENAME IS NOW <SIMPLE> "
+    if (frames_set and not basename_set):
+        print "BASENAME WAS NOT SET "
 
     return frames
             
@@ -85,7 +86,7 @@ def second_pass( commands, num_frames ):
     global knobs
     global frames_set
 
-    if not frames_set:
+    if (not frames_set):
         return
 
     knobs = [{} for x in range(num_frames)]
@@ -101,7 +102,7 @@ def second_pass( commands, num_frames ):
         c = command[0]
         args = command[1:]
 
-        if c == "vary":
+        if (c == "vary"):
             name = args[0]
             start_frame = int(args[1])
             end_frame = int(args[2])
@@ -110,7 +111,8 @@ def second_pass( commands, num_frames ):
 
             diff_frame = end_frame - start_frame
 
-            if diff_frame < 0 or start_frame < 0 or end_frame >= frames:
+            #EXECEPTION
+            if (diff_frame < 0 or start_frame < 0 or end_frame >= frames):
                 print "INVALID FRAME RANGE"
                 return
 
@@ -120,7 +122,10 @@ def second_pass( commands, num_frames ):
             inc = start_val
             m = 1
 
-            if change_diff < 0:
+            #IF THE ANIMATIN IS GOING FROM A HIGH TO A LOWER VALUE,
+            #THE ORDER MUST BE CAHNGED
+            if (change_diff < 0):
+                
                 temp = start_frame
                 start_frame = end_frame
                 end_frame = temp
@@ -144,11 +149,6 @@ def second_pass( commands, num_frames ):
                     inc += change_diff
 
 
-    #MORE OF THE SAME
-    #            
-    #print "WHAT UP"
-    #print knobs
-    #
     return knobs
     
     
@@ -158,6 +158,11 @@ def run(filename):
     This function runs an mdl script
     """
 
+    #HERE COME ALL THE COMMANDS
+    #IN TIS SECTION RELEVANT COMMANDS WILL FIRE RELEVANT ACTIONS
+    #AND EXECEUTE THE APPRORIATE COMPUTER REACTION
+
+    
     global frames
     global frames_set
     global basename
@@ -169,11 +174,10 @@ def run(filename):
     tmp = new_matrix()
     ident( tmp )
 
-    #
     screen = new_screen()
     step = .01
-    #
 
+    
     p = mdl.parseFile(filename)
 
     if p:
@@ -186,7 +190,7 @@ def run(filename):
     first_pass(commands)
     second_pass(commands, frames)
 
-    if not frames_set:
+    if (not frames_set):
         frames = 1
     #^
     
@@ -215,10 +219,10 @@ def run(filename):
             
 
             #
-            if c == "set":
+            if (c == "set"):
                 symbold[args[0]][1] = float(args[1])
 
-            elif c == "setknobs":
+            elif (c == "setknobs"):
                 for s in symbols:
                     if symbols[s][0] == "knob":
                         symbols[s][1] = float(args[0])
@@ -273,9 +277,9 @@ def run(filename):
             elif c == 'scale':
 
                 if args[3] != None:
-                    a = knobs[i][args[3]] * args[0]
-                    b = knobs[i][args[3]] * args[1]
-                    c = knobs[i][args[3]] * args[2]
+                    a = (knobs[i][args[3]]) * args[0]
+                    b = (knobs[i][args[3]]) * args[1]
+                    c = (knobs[i][args[3]]) * args[2]
                     args = (a,b,c,args[3])
                 
                 tmp = make_scale(args[0], args[1], args[2])
@@ -287,7 +291,7 @@ def run(filename):
             elif c == 'rotate':
 
                 if args[2] != None:
-                    a = knobs[i][args[2]] * args[1]
+                    a = (knobs[i][args[2]]) * args[1]
                     args = (args[0], a, args[2])
                 
                 theta = args[1] * (math.pi/180)
@@ -312,11 +316,16 @@ def run(filename):
                 save_extension(screen, args[0])
 
 ####
-                
+
+
+#THE LAST STEPS
+#HERE WE JUST SAVE AND PACKAGE IT ALL TOGETHER
+
+
         name = "anim/" + basename + (3-len(str(i))) * "0" +str(i) + ".ppm"
 
-        if not os.path.exists("anim"):
-            os.makedirs("anim")
+        #if (not os.path.exists("anim")):
+        #    os.makedirs("anim")
 
         save_ppm(screen, name)
         clear_screen(screen)

@@ -1,4 +1,7 @@
-run: simple_anim.mdl lex.py main.py matrix.py mdl.py display.py draw.py gmath.py yacc.py
+run: futbol.mdl lex.py main.py matrix.py mdl.py display.py draw.py gmath.py yacc.py
+	python main.py futbol.mdl
+
+simple: simple_anim.mdl lex.py main.py matrix.py mdl.py display.py draw.py gmath.py yacc.py
 	python main.py simple_anim.mdl
 
 test: test.mdl lex.py main.py matrix.py mdl.py display.py draw.py gmath.py yacc.py
