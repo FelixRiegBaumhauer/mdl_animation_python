@@ -4,11 +4,6 @@ from matrix import *
 from draw import *
 
 
-basename_set = False
-basename = 'simple'
-frames_set = False
-frames = None
-
 """======== first_pass( commands, symbols ) ==========
 
   Checks the commands array for any animation commands
@@ -26,6 +21,15 @@ frames = None
 
   jdyrlandweaver
   ==================== """
+
+
+
+basename_set = False
+basename = 'simple'
+frames_set = False
+frames = None
+
+
 def first_pass( commands ):
     #pass
 
@@ -79,7 +83,11 @@ def first_pass( commands ):
   dictionary corresponding to the given knob with the
   appropirate value. 
   ===================="""
+
+
 knobs = []
+
+
 def second_pass( commands, num_frames ):
     #pass
 
@@ -122,13 +130,16 @@ def second_pass( commands, num_frames ):
             inc = start_val
             m = 1
 
-            #IF THE ANIMATIN IS GOING FROM A HIGH TO A LOWER VALUE,
+            #IF THE ANIMATION IS GOING FROM A HIGH TO A LOWER VALUE,
             #THE ORDER MUST BE CAHNGED
             if (change_diff < 0):
-                
+
+                #SWITCHING TEH VALUES
                 temp = start_frame
                 start_frame = end_frame
                 end_frame = temp
+
+                #CHANGING THE DIRECTION
                 change_diff *= -1.0 #make it positive
                 m *= -1 #go backwards in frames
                 inc = end_val #change the start
@@ -262,7 +273,9 @@ def run(filename):
                 #print knobs[i][args[3]]
                 '''
                 #
-                
+                #FEEDING IN THE ARGUMNETS FOR EACH KNOB
+                #DONE BY ACESSING OUR DICTIONARY AND MUTIPLYING
+                #THE END VALUE BY THE VALUE THAT TRACKS OUR PROGRESSION
                 if args[3] != None:
                     a = (knobs[i][args[3]]) * args[0]
                     b = (knobs[i][args[3]]) * args[1]
@@ -323,9 +336,6 @@ def run(filename):
 
 
         name = "anim/" + basename + (3-len(str(i))) * "0" +str(i) + ".ppm"
-
-        #if (not os.path.exists("anim")):
-        #    os.makedirs("anim")
 
         save_ppm(screen, name)
         clear_screen(screen)
